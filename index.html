@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEPConnect - NEP 2020 Aligned Learning Platform</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-bg: #f8fafc;
+            --dark-text: #1e293b;
+            --light-text: #64748b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Noto Sans', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        input[type="text"], select, input[type="number"], textarea { 
+            padding: 12px;
+            width: 100%;
+            margin: 8px 0 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus, select:focus, input[type="number"]:focus, textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(to right, var(--success-color), #34d399);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            opacity: 0.9;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .output-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            min-height: 200px;
+        }
+        
+        .loading {
+            color: var(--light-text);
+            font-style: italic;
+        }
+        
+        .instructions {
+            font-size: 15px;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+        
+        .drone-animation {
+            position: absolute;
+            width: 50px;
+            top: 10px;
+            left: -50px;
+            animation: fly 3s linear forwards;
+            display: none;
+        }
+        
+        @keyframes fly {
+            0% { left: -50px; top: 10px; }
+            100% { left: 90%; top: 10px; }
+        }
+        
+        .lesson-section {
+            margin-bottom: 25px;
+        }
+        
+        .lesson-title {
+            color: var(--primary-color);
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .concept-box {
+            background: #ebf5ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .example-box {
+            background: #f0fdf4;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .practice-box {
+            background: #fffbeb;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid var(--warning-color);
+        }
+        
+        .iit-box {
+            background: #fef2f2;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid var(--danger-color);
+        }
+        
+        .simulation-box {
+            background: #f5f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid #7c3aed;
+        }
+        
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 5px;
+            background: #e2e8f0;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background: #cbd5e1;
+        }
+        
+        .tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            margin: 15px 0;
+            height: 24px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--success-color), #34d399);
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 24px;
+            transition: width 0.5s;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: var(--light-bg);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--light-text);
+            margin: 10px 0;
+        }
+        
+        .visual-hint {
+            background: #fef9c3;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid var(--warning-color);
+        }
+        
+        .strength-highlight {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .weakness-alert {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        .interest-note {
+            color: #0ea5e9;
+            font-weight: bold;
+        }
+        
+        .learning-path {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid var(--light-text);
+        }
+        
+        .path-step {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 30px;
+            line-height: 1.5;
+        }
+        
+        .path-step:before {
+            content: "→";
+            position: absolute;
+            left: 10px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .path-step.completed {
+            color: var(--light-text);
+        }
+        
+        .path-step.completed:before {
+            content: "✓";
+            color: var(--success-color);
+        }
+        
+        .difficulty-indicator {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .difficulty-easy {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .difficulty-medium {
+            background: #fef08a;
+            color: #854d0e;
+        }
+        
+        .difficulty-hard {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .tab-content iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .translation-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            font-size: 24px;
+            flex-direction: column;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .nep-highlight {
+            background: #e0f2fe;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid #0ea5e9;
+        }
+        
+        .nep-pillar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .nep-pillar-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .vocational-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .holistic-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 3px solid #8b5cf6;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .assessment-badge {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #047857;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            border: 1px solid #a7f3d0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .language-selector {
+                position: static;
+                margin-bottom: 15px;
+                text-align: right;
+            }
+            
+            .tab-content iframe {
+                height: 400px;
+            }
+            
+            .flex-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="bn">বাংলা</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="mr">मराठी</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ml">മലയാളം</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="or">ଓଡ଼ିଆ</option>
+            <option value="as">অসমীয়া</option>
+            <option value="ur">اردو</option>
+        </select>
+    </div>
+
+    <div id="translationLoading" class="translation-loading" style="display: none;">
+        <div class="spinner"></div>
+        Translating content... Please wait
+    </div>
+
+    <div class="header">
+        <h1 id="appTitle">NEPConnect</h1>
+        <h3 id="appSubtitle">Your NEP 2020 Aligned Learning Platform</h3>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2 id="step1Title">Step 1: Setup Your Learning Profile</h2>
+            <p class="instructions" id="step1Instructions">Complete your profile to get personalized learning aligned with NEP 2020 guidelines.</p>
+            
+            <div class="flex-container">
+                <div class="flex-item">
+                    <label for="currentClass" id="currentClassLabel">Current Class/Grade:</label>
+                    <select id="currentClass">
+                        <option value="foundation">Foundation Stage (Age 3-8)</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5">Class 5</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                        <option value="college">College/University</option>
+                    </select>
+                    
+                    <label for="currentMarks" id="currentMarksLabel">Current Performance Level:</label>
+                    <select id="currentMarks">
+                        <option value="beginner">Beginner (Just starting)</option>
+                        <option value="developing">Developing (Basic understanding)</option>
+                        <option value="proficient" selected>Proficient (Meets expectations)</option>
+                        <option value="advanced">Advanced (Exceeds expectations)</option>
+                        <option value="expert">Expert (Mastery level)</option>
+                    </select>
+                    
+                    <label for="learningStyle" id="learningStyleLabel">Preferred Learning Style:</label>
+                    <select id="learningStyle">
+                        <option value="visual" selected>Visual Learner (Diagrams, Charts)</option>
+                        <option value="auditory">Auditory Learner (Explanations, Discussions)</option>
+                        <option value="kinesthetic">Kinesthetic Learner (Hands-on Activities)</option>
+                        <option value="readwrite">Reading/Writing Learner (Textbooks, Notes)</option>
+                        <option value="multimodal">Multimodal (Combination of styles)</option>
+                    </select>
+                </div>
+                
+                <div class="flex-item">
+                    <label for="strengths" id="strengthsLabel">Your Strong Areas (comma separated):</label>
+                    <input type="text" id="strengths" placeholder="e.g., Logical reasoning, Creativity" value="Logical reasoning, Creativity">
+                    
+                    <label for="weaknesses" id="weaknessesLabel">Areas Needing Improvement (comma separated):</label>
+                    <input type="text" id="weaknesses" placeholder="e.g., Problem solving, Communication" value="Problem solving, Communication">
+                    
+                    <label for="interests" id="interestsLabel">Your Interests (comma separated):</label>
+                    <input type="text" id="interests" placeholder="e.g., Robotics, Environmental science, Music" value="Robotics, Environmental science, Music">
+                </div>
+            </div>
+            
+            <label for="goal" id="goalLabel">Learning Goals:</label>
+            <select id="goal">
+                <option value="foundational">Foundational Literacy & Numeracy</option>
+                <option value="holistic">Holistic Development</option>
+                <option value="vocational">Vocational Skills</option>
+                <option value="serious" selected>Academic Excellence</option>
+                <option value="competitive">Competitive Exams</option>
+                <option value="research">Research & Innovation</option>
+            </select>
+            
+            <label for="studyTime" id="studyTimeLabel">Weekly Learning Time Available:</label>
+            <select id="studyTime">
+                <option value="5">5 hours</option>
+                <option value="10">10 hours</option>
+                <option value="15" selected>15 hours</option>
+                <option value="20">20 hours</option>
+                <option value="25+">25+ hours</option>
+            </select>
+            
+            <div class="nep-highlight">
+                <h4>NEP 2020 Alignment</h4>
+                <p>Your profile helps us create learning experiences that align with the 5+3+3+4 structure and holistic education approach of NEP 2020.</p>
+            </div>
+            
+            <button onclick="saveProfile()" id="saveProfileBtn">Save & Analyze Profile</button>
+            
+            <div id="profileAnalysis" class="output-box" style="display: none; margin-top: 20px;">
+                <!-- Profile analysis will appear here -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 id="step2Title">Step 2: Select Learning Experience</h2>
+            <p class="instructions" id="step2Instructions">Choose a topic or skill to learn, aligned with NEP's multidisciplinary approach.</p>
+            
+            <div class="flex-container">
+                <div class="flex-item">
+                    <label for="subjectSelect" id="subjectSelectLabel">Subject Area:</label>
+                    <select id="subjectSelect">
+                        <option value="multidisciplinary">Multidisciplinary</option>
+                        <option value="science">Science</option>
+                        <option value="mathematics">Mathematics</option>
+                        <option value="language">Languages</option>
+                        <option value="arts">Arts & Humanities</option>
+                        <option value="vocational">Vocational Skills</option>
+                        <option value="sports">Sports & Fitness</option>
+                        <option value="computing">Computing & AI</option>
+                        <option value="life">Life Skills</option>
+                    </select>
+                </div>
+                
+                <div class="flex-item">
+                    <label for="topicInput" id="topicInputLabel">Topic/Skill Name:</label>
+                    <input type="text" id="topicInput" placeholder="e.g., Sustainable development, Algebra, Drone technology" value="Sustainable development">
+                </div>
+            </div>
+            
+            <label for="topicDepth" id="topicDepthLabel">Learning Level:</label>
+            <select id="topicDepth">
+                <option value="basic">Basic Understanding</option>
+                <option value="intermediate" selected>Intermediate Application</option>
+                <option value="advanced">Advanced Concepts</option>
+                <option value="expert">Expert/Mastery Level</option>
+            </select>
+            
+            <div class="nep-highlight">
+                <h4>NEP 2020 Focus Areas</h4>
+                <div class="nep-pillar">
+                    <div class="nep-pillar-icon"><i class="fas fa-brain"></i></div>
+                    <div>Critical Thinking & Problem Solving</div>
+                </div>
+                <div class="nep-pillar">
+                    <div class="nep-pillar-icon"><i class="fas fa-users"></i></div>
+                    <div>Collaboration & Communication</div>
+                </div>
+                <div class="nep-pillar">
+                    <div class="nep-pillar-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div>Creativity & Innovation</div>
+                </div>
+            </div>
+            
+            <button onclick="generateFullLesson()" id="generateLessonBtn">Generate NEP-Aligned Learning Experience</button>
+        </div>
+
+        <div class="section">
+            <h2 id="step3Title">Step 3: Your NEP-Aligned Learning Journey</h2>
+            <p class="instructions" id="step3Instructions">Your personalized learning experience with multidisciplinary approach, skill development and holistic education.</p>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('theory')" id="theoryTab">Conceptual Understanding</div>
+                <div class="tab" onclick="switchTab('examples')" id="examplesTab">Real-world Applications</div>
+                <div class="tab" onclick="switchTab('practice')" id="practiceTab">Skill Development</div>
+                <div class="tab" onclick="switchTab('assessment')" id="assessmentTab">Competency Assessment</div>
+                <div class="tab" onclick="switchTab('simulation')" id="simulationTab">Experiential Learning</div>
+                <div class="tab" onclick="switchTab('coding')" id="codingTab">Computational Thinking</div>
+                <div class="tab" onclick="switchTab('holistic')" id="holisticTab">Holistic Development</div>
+            </div>
+            
+            <div id="lessonOutput" class="output-box">
+                <div id="theory" class="tab-content active">
+                    <p id="theoryPlaceholder">Your conceptual understanding materials will appear here after generation.</p>
+                </div>
+                <div id="examples" class="tab-content">
+                    <p id="examplesPlaceholder">Real-world applications and multidisciplinary connections will appear here.</p>
+                </div>
+                <div id="practice" class="tab-content">
+                    <p id="practicePlaceholder">Skill-building activities tailored to your level will appear here.</p>
+                </div>
+                <div id="assessment" class="tab-content">
+                    <p id="assessmentPlaceholder">Competency-based assessments will appear here.</p>
+                </div>
+                <div id="simulation" class="tab-content">
+                    <p id="simulationPlaceholder">Experiential learning simulations will appear here.</p>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3038/3038102.png" id="drone" class="drone-animation" alt="Drone">
+                </div>
+                <div id="coding" class="tab-content">
+                    <iframe src="code-editor.html" style="width:100%; height:600px; border:none;"></iframe>
+                </div>
+                <div id="holistic" class="tab-content">
+                    <p id="holisticPlaceholder">Holistic development activities will appear here.</p>
+                </div>
+            </div>
+            
+            <div id="learningProgress" style="display: none; margin-top: 20px;">
+                <h3 id="progressTitle">Your Competency Progress</h3>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <div id="progressDetails" class="learning-path"></div>
+                
+                <div class="nep-highlight">
+                    <h4>NEP 2020 Key Competencies</h4>
+                    <div>
+                        <span class="skill-tag"><i class="fas fa-brain"></i> Critical Thinking</span>
+                        <span class="skill-tag"><i class="fas fa-lightbulb"></i> Creativity</span>
+                        <span class="skill-tag"><i class="fas fa-users"></i> Collaboration</span>
+                        <span class="skill-tag"><i class="fas fa-comments"></i> Communication</span>
+                        <span class="skill-tag"><i class="fas fa-laptop-code"></i> Digital Literacy</span>
+                        <span class="skill-tag"><i class="fas fa-seedling"></i> Environmental Awareness</span>
+                        <span class="skill-tag"><i class="fas fa-hands-helping"></i> Social Responsibility</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LibreTranslate API configuration
+        const translateAPI = {
+            url: "https://libretranslate.de/translate",
+            detectUrl: "https://libretranslate.de/detect",
+            languagesUrl: "https://libretranslate.de/languages",
+            apiKey: "" // No API key needed for public instance
+        };
+
+        // Language translations (fallback)
+        const translations = {
+            en: {
+                appTitle: "NEPConnect",
+                appSubtitle: "Your NEP 2020 Aligned Learning Platform",
+                step1Title: "Step 1: Setup Your Learning Profile",
+                step1Instructions: "Complete your profile to get personalized learning aligned with NEP 2020 guidelines.",
+                currentClassLabel: "Current Class/Grade:",
+                currentMarksLabel: "Current Performance Level:",
+                strengthsLabel: "Your Strong Areas (comma separated):",
+                weaknessesLabel: "Areas Needing Improvement (comma separated):",
+                learningStyleLabel: "Preferred Learning Style:",
+                interestsLabel: "Your Interests (comma separated):",
+                goalLabel: "Learning Goals:",
+                studyTimeLabel: "Weekly Learning Time Available:",
+                saveProfileBtn: "Save & Analyze Profile",
+                step2Title: "Step 2: Select Learning Experience",
+                step2Instructions: "Choose a topic or skill to learn, aligned with NEP's multidisciplinary approach.",
+                subjectSelectLabel: "Subject Area:",
+                topicInputLabel: "Topic/Skill Name:",
+                topicDepthLabel: "Learning Level:",
+                generateLessonBtn: "Generate NEP-Aligned Learning Experience",
+                step3Title: "Step 3: Your NEP-Aligned Learning Journey",
+                step3Instructions: "Your personalized learning experience with multidisciplinary approach, skill development and holistic education.",
+                theoryTab: "Conceptual Understanding",
+                examplesTab: "Real-world Applications",
+                practiceTab: "Skill Development",
+                assessmentTab: "Competency Assessment",
+                simulationTab: "Experiential Learning",
+                codingTab: "Computational Thinking",
+                holisticTab: "Holistic Development",
+                theoryPlaceholder: "Your conceptual understanding materials will appear here after generation.",
+                examplesPlaceholder: "Real-world applications and multidisciplinary connections will appear here.",
+                practicePlaceholder: "Skill-building activities tailored to your level will appear here.",
+                assessmentPlaceholder: "Competency-based assessments will appear here.",
+                simulationPlaceholder: "Experiential learning simulations will appear here.",
+                holisticPlaceholder: "Holistic development activities will appear here.",
+                progressTitle: "Your Competency Progress"
+            },
+            hi: {
+                appTitle: "एनईपीकनेक्ट",
+                appSubtitle: "राष्ट्रीय शिक्षा नीति 2020 अनुरूप आपका शिक्षण मंच",
+                step1Title: "चरण 1: अपनी शिक्षण प्रोफ़ाइल सेट करें",
+                step1Instructions: "एनईपी 2020 दिशानिर्देशों के अनुरूप व्यक्तिगत शिक्षण प्राप्त करने के लिए अपनी प्रोफ़ाइल पूरी करें।",
+                currentClassLabel: "वर्तमान कक्षा/ग्रेड:",
+                currentMarksLabel: "वर्तमान प्रदर्शन स्तर:",
+                strengthsLabel: "आपके मजबूत क्षेत्र (अल्पविराम से अलग):",
+                weaknessesLabel: "सुधार की आवश्यकता वाले क्षेत्र (अल्पविराम से अलग):",
+                learningStyleLabel: "पसंदीदा शिक्षण शैली:",
+                interestsLabel: "आपकी रुचियाँ (अल्पविराम से अलग):",
+                goalLabel: "शिक्षण लक्ष्य:",
+                studyTimeLabel: "प्रति सप्ताह उपलब्ध शिक्षण समय:",
+                saveProfileBtn: "सहेजें और प्रोफ़ाइल विश्लेषण करें",
+                step2Title: "चरण 2: शिक्षण अनुभव चुनें",
+                step2Instructions: "एनईपी के बहु-विषयक दृष्टिकोण के अनुरूप सीखने के लिए एक विषय या कौशल चुनें।",
+                subjectSelectLabel: "विषय क्षेत्र:",
+                topicInputLabel: "विषय/कौशल नाम:",
+                topicDepthLabel: "शिक्षण स्तर:",
+                generateLessonBtn: "एनईपी-अनुरूप शिक्षण अनुभव उत्पन्न करें",
+                step3Title: "चरण 3: आपकी एनईपी-अनुरूप शिक्षण यात्रा",
+                step3Instructions: "बहु-विषयक दृष्टिकोण, कौशल विकास और समग्र शिक्षा के साथ आपका व्यक्तिगत शिक्षण अनुभव।",
+                theoryTab: "वैचारिक समझ",
+                examplesTab: "वास्तविक दुनिया के अनुप्रयोग",
+                practiceTab: "कौशल विकास",
+                assessmentTab: "दक्षता मूल्यांकन",
+                simulationTab: "अनुभवात्मक शिक्षण",
+                codingTab: "कम्प्यूटेशनल सोच",
+                holisticTab: "समग्र विकास",
+                theoryPlaceholder: "आपकी वैचारिक समझ की सामग्री जनरेशन के बाद यहां दिखाई देगी।",
+                examplesPlaceholder: "वास्तविक दुनिया के अनुप्रयोग और बहु-विषयक संबंध यहां दिखाई देंगे।",
+                practicePlaceholder: "आपके स्तर के अनुरूप कौशल निर्माण गतिविधियाँ यहाँ दिखाई देंगी।",
+                assessmentPlaceholder: "दक्षता-आधारित मूल्यांकन यहां दिखाई देंगे।",
+                simulationPlaceholder: "अनुभवात्मक शिक्षण सिमुलेशन यहां दिखाई देंगे।",
+                holisticPlaceholder: "समग्र विकास गतिविधियाँ यहाँ दिखाई देंगी।",
+                progressTitle: "आपकी दक्षता प्रगति"
+            },
+            // Other languages would follow the same pattern...
+        };
+
+        // Set initial language
+        let currentLanguage = 'en';
+        
+        // Function to translate text using LibreTranslate
+        async function translateText(text, targetLang) {
+            if (!text || targetLang === 'en') return text;
+            
+            try {
+                const response = await fetch(translateAPI.url, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        q: text,
+                        source: 'en',
+                        target: targetLang,
+                        format: 'text'
+                    }),
+                    headers: { "Content-Type": "application/json" }
+                });
+                
+                const data = await response.json();
+                return data.translatedText || text;
+            } catch (error) {
+                console.error("Translation error:", error);
+                return text; // Return original text if translation fails
+            }
+        }
+        
+        // Function to translate all UI elements
+        async function translateUI(lang) {
+            const loadingElement = document.getElementById('translationLoading');
+            loadingElement.style.display = 'flex';
+            
+            try {
+                // Check if we have cached translations
+                if (translations[lang]) {
+                    updateLanguageUI(lang);
+                    loadingElement.style.display = 'none';
+                    return;
+                }
+                
+                // Get all translatable elements
+                const elementsToTranslate = [
+                    { id: 'appTitle', text: 'NEPConnect' },
+                    { id: 'appSubtitle', text: 'Your NEP 2020 Aligned Learning Platform' },
+                    // Add all other translatable elements here...
+                ];
+                
+                // Translate each element
+                for (const element of elementsToTranslate) {
+                    const translatedText = await translateText(element.text, lang);
+                    document.getElementById(element.id).textContent = translatedText;
+                }
+                
+                loadingElement.style.display = 'none';
+            } catch (error) {
+                console.error("UI translation failed:", error);
+                loadingElement.style.display = 'none';
+                // Fall back to English if translation fails
+                updateLanguageUI('en');
+            }
+        }
+        
+        // Update UI with cached translations
+        function updateLanguageUI(lang) {
+            const langData = translations[lang] || translations['en'];
+            
+            // Update all elements with translations
+            document.getElementById('appTitle').textContent = langData.appTitle;
+            document.getElementById('appSubtitle').textContent = langData.appSubtitle;
+            document.getElementById('step1Title').textContent = langData.step1Title;
+            document.getElementById('step1Instructions').textContent = langData.step1Instructions;
+            document.getElementById('currentClassLabel').textContent = langData.currentClassLabel;
+            document.getElementById('currentMarksLabel').textContent = langData.currentMarksLabel;
+            document.getElementById('strengthsLabel').textContent = langData.strengthsLabel;
+            document.getElementById('weaknessesLabel').textContent = langData.weaknessesLabel;
+            document.getElementById('learningStyleLabel').textContent = langData.learningStyleLabel;
+            document.getElementById('interestsLabel').textContent = langData.interestsLabel;
+            document.getElementById('goalLabel').textContent = langData.goalLabel;
+            document.getElementById('studyTimeLabel').textContent = langData.studyTimeLabel;
+            document.getElementById('saveProfileBtn').textContent = langData.saveProfileBtn;
+            document.getElementById('step2Title').textContent = langData.step2Title;
+            document.getElementById('step2Instructions').textContent = langData.step2Instructions;
+            document.getElementById('subjectSelectLabel').textContent = langData.subjectSelectLabel;
+            document.getElementById('topicInputLabel').textContent = langData.topicInputLabel;
+            document.getElementById('topicDepthLabel').textContent = langData.topicDepthLabel;
+            document.getElementById('generateLessonBtn').textContent = langData.generateLessonBtn;
+            document.getElementById('step3Title').textContent = langData.step3Title;
+            document.getElementById('step3Instructions').textContent = langData.step3Instructions;
+            document.getElementById('theoryTab').textContent = langData.theoryTab;
+            document.getElementById('examplesTab').textContent = langData.examplesTab;
+            document.getElementById('practiceTab').textContent = langData.practiceTab;
+            document.getElementById('assessmentTab').textContent = langData.assessmentTab;
+            document.getElementById('simulationTab').textContent = langData.simulationTab;
+            document.getElementById('codingTab').textContent = langData.codingTab;
+            document.getElementById('holisticTab').textContent = langData.holisticTab;
+            document.getElementById('theoryPlaceholder').textContent = langData.theoryPlaceholder;
+            document.getElementById('examplesPlaceholder').textContent = langData.examplesPlaceholder;
+            document.getElementById('practicePlaceholder').textContent = langData.practicePlaceholder;
+            document.getElementById('assessmentPlaceholder').textContent = langData.assessmentPlaceholder;
+            document.getElementById('simulationPlaceholder').textContent = langData.simulationPlaceholder;
+            document.getElementById('holisticPlaceholder').textContent = langData.holisticPlaceholder;
+            document.getElementById('progressTitle').textContent = langData.progressTitle;
+        }
+
+        // Function to change language
+        async function changeLanguage() {
+            const newLang = document.getElementById('languageSelect').value;
+            currentLanguage = newLang;
+            
+            // First try to use cached translations
+            if (translations[newLang]) {
+                updateLanguageUI(newLang);
+            } else {
+                // Fall back to API translation
+                await translateUI(newLang);
+            }
+            
+            // Save language preference
+            localStorage.setItem('preferredLanguage', newLang);
+        }
+
+        // Initialize language on load
+        window.onload = function() {
+            // Set language from localStorage or default to English
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            document.getElementById('languageSelect').value = savedLang;
+            currentLanguage = savedLang;
+            updateLanguageUI(savedLang);
+            
+            // Set default profile if none exists
+            if (!localStorage.getItem("studentProfile")) {
+                const defaultProfile = {
+                    currentClass: "11",
+                    currentMarks: "proficient",
+                    strengths: ["Logical reasoning", "Creativity"],
+                    weaknesses: ["Problem solving", "Communication"],
+                    learningStyle: "visual",
+                    interests: ["Robotics", "Environmental science", "Music"],
+                    goal: "serious",
+                    studyTime: "15"
+                };
+                localStorage.setItem("studentProfile", JSON.stringify(defaultProfile));
+            }
+        };
+
+        // Switch between lesson tabs
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Generate comprehensive lesson aligned with NEP 2020
+        async function generateFullLesson() {
+            const topic = document.getElementById("topicInput").value || "Sustainable development";
+            const subject = document.getElementById("subjectSelect").value;
+            const depth = document.getElementById("topicDepth").value;
+            const profile = JSON.parse(localStorage.getItem("studentProfile")) || {
+                currentClass: "11",
+                currentMarks: "proficient",
+                strengths: ["Logical reasoning"],
+                weaknesses: ["Problem solving"],
+                learningStyle: "visual",
+                interests: ["Robotics"],
+                goal: "serious",
+                studyTime: "15"
+            };
+            
+            // Show loading state
+            document.getElementById('theory').innerHTML = "<p>Creating NEP-aligned learning experience... <span class='loading'>This may take a moment</span></p>";
+            document.getElementById('examples').innerHTML = "<p>Preparing multidisciplinary applications...</p>";
+            document.getElementById('practice').innerHTML = "<p>Developing skill-building activities...</p>";
+            document.getElementById('assessment').innerHTML = "<p>Designing competency assessments...</p>";
+            document.getElementById('simulation').innerHTML = "<p>Setting up experiential learning...</p>";
+            document.getElementById('holistic').innerHTML = "<p>Planning holistic development activities...</p>";
+            
+            // Show learning progress
+            document.getElementById('learningProgress').style.display = 'block';
+            updateProgressBar(10);
+            
+            // Generate theory content
+            setTimeout(async () => {
+                const theoryContent = await generateTheoryContent(topic, subject, depth, profile);
+                document.getElementById('theory').innerHTML = theoryContent;
+                updateProgressBar(20);
+                
+                // Generate examples
+                setTimeout(() => {
+                    const examplesContent = generateExamplesContent(topic, subject, depth, profile);
+                    document.getElementById('examples').innerHTML = examplesContent;
+                    updateProgressBar(35);
+                    
+                    // Generate practice problems
+                    setTimeout(() => {
+                        const practiceContent = generatePracticeContent(topic, subject, depth, profile);
+                        document.getElementById('practice').innerHTML = practiceContent;
+                        updateProgressBar(50);
+                        
+                        // Generate assessments
+                        setTimeout(() => {
+                            const assessmentContent = generateAssessmentContent(topic, subject, depth, profile);
+                            document.getElementById('assessment').innerHTML = assessmentContent;
+                            updateProgressBar(65);
+                            
+                            // Generate simulation
+                            setTimeout(() => {
+                                const simulationContent = generateSimulationContent(topic, subject, depth, profile);
+                                document.getElementById('simulation').innerHTML = simulationContent;
+                                updateProgressBar(80);
+                                
+                                // Generate holistic content
+                                setTimeout(() => {
+                                    const holisticContent = generateHolisticContent(topic, subject, depth, profile);
+                                    document.getElementById('holistic').innerHTML = holisticContent;
+                                    updateProgressBar(100);
+                                    
+                                    // Show drone animation only for relevant topics
+                                    if (shouldShowDrone(topic, subject)) {
+                                        const drone = document.getElementById("drone");
+                                        drone.style.display = "block";
+                                        setTimeout(() => { 
+                                            drone.style.display = "none";
+                                        }, 3000);
+                                    }
+                                }, 1000);
+                            }, 1000);
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1500);
+        }
+
+        // Generate detailed theory content aligned with NEP
+        async function generateTheoryContent(topic, subject, depth, profile) {
+            let content = `<div class="lesson-section">
+                <h2 class="lesson-title">${topic} - Conceptual Understanding</h2>
+                <div class="concept-box">
+                    <h3>Core Concept Introduction</h3>`;
+            
+            // Get basic description based on class
+            const classLevel = profile.currentClass;
+            let description = "", detailedContent = "";
+            
+            // Sample content for different topics
+            if (topic === "Sustainable development") {
+                description = `Understanding sustainable development and its importance in modern society`;
+                detailedContent = `Sustainable development is development that meets the needs of the present without compromising the ability of future generations to meet their own needs. It integrates three key dimensions: economic growth, social inclusion, and environmental protection.`;
+                
+                // Add NEP alignment
+                content += `<div class="nep-highlight">
+                    <h4>NEP Connection: Environmental Awareness</h4>
+                    <p>This topic aligns with NEP's emphasis on environmental education and awareness as part of holistic development.</p>
+                </div>`;
+            } else if (topic === "Algebra") {
+                description = `Fundamentals of algebraic thinking and problem solving`;
+                detailedContent = `Algebra is a branch of mathematics dealing with symbols and the rules for manipulating those symbols. It provides a foundation for nearly all areas of mathematics and is essential for problem solving in science, engineering, and many other fields.`;
+            } else {
+                description = `Fundamentals of ${topic}`;
+                detailedContent = `${topic} is an important concept that integrates multiple disciplines and real-world applications.`;
+            }
+            
+            content += `<p><strong>${description}</strong></p>`;
+            
+            // Add content based on learning style
+            if (profile.learningStyle === "visual") {
+                content += `<div class="visual-hint">
+                    <p>🖼️ <strong>Visual Learning Tip:</strong> Create a mind map showing the key concepts of ${topic} and their relationships.</p>
+                </div>`;
+            } else if (profile.learningStyle === "auditory") {
+                content += `<div class="visual-hint">
+                    <p>🎧 <strong>Auditory Learning Tip:</strong> Explain the concept of ${topic} to a friend or record yourself explaining it.</p>
+                </div>`;
+            } else if (profile.learningStyle === "kinesthetic") {
+                content += `<div class="visual-hint">
+                    <p>✋ <strong>Kinesthetic Learning Tip:</strong> Create a physical model or demonstration that represents ${topic} concepts.</p>
+                </div>`;
+            } else if (profile.learningStyle === "readwrite") {
+                content += `<div class="visual-hint">
+                    <p>📝 <strong>Reading/Writing Tip:</strong> Write a summary of ${topic} in your own words and create flashcards for key terms.</p>
+                </div>`;
+            }
+            
+            content += `<p>${detailedContent}</p>`;
+            
+            // Add difficulty indicator based on NEP's competency-based approach
+            let difficulty = "";
+            if (profile.currentMarks === "beginner" || profile.currentMarks === "developing") {
+                difficulty = `<span class="difficulty-indicator difficulty-medium">Foundational Level</span>`;
+            } else if (profile.currentMarks === "proficient") {
+                difficulty = `<span class="difficulty-indicator difficulty-medium">Intermediate Level</span>`;
+            } else {
+                difficulty = `<span class="difficulty-indicator difficulty-hard">Advanced Level</span>`;
+            }
+            
+            content += `<p>Current competency level for you: ${difficulty}</p>`;
+            
+            // Add key concepts with NEP skill tags
+            content += `<div class="concept-box">
+                <h3>Key Concepts</h3>
+                <p>Understanding these core ideas will help develop important competencies:</p>
+                <ul>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<li>Three pillars of sustainability (economic, social, environmental) <span class="skill-tag">Systems Thinking</span></li>
+                <li>Sustainable Development Goals (SDGs) <span class="skill-tag">Global Awareness</span></li>
+                <li>Circular economy principles <span class="skill-tag">Innovation</span></li>
+                <li>Climate change mitigation strategies <span class="skill-tag">Problem Solving</span></li>`;
+            } else if (topic === "Algebra") {
+                content += `<li>Variables and expressions <span class="skill-tag">Logical Reasoning</span></li>
+                <li>Linear equations <span class="skill-tag">Problem Solving</span></li>
+                <li>Functions and graphs <span class="skill-tag">Visualization</span></li>
+                <li>Polynomial operations <span class="skill-tag">Computational Thinking</span></li>`;
+            }
+            
+            content += `</ul></div>`;
+            
+            // Add detailed explanation based on competency level and depth
+            content += `<div class="concept-box">
+                <h3>Detailed Explanation</h3>`;
+            
+            if (depth === "basic") {
+                content += `<p>Let's understand ${topic} at a foundational level:</p>`;
+                
+                if (topic === "Sustainable development") {
+                    content += `<p>Sustainable development balances our needs with the needs of future generations. It means:</p>
+                    <ul>
+                        <li>Using resources wisely so they don't run out</li>
+                        <li>Protecting ecosystems and biodiversity</li>
+                        <li>Ensuring fair access to resources for all people</li>
+                        <li>Creating economic systems that can continue long-term</li>
+                    </ul>`;
+                } else if (topic === "Algebra") {
+                    content += `<p>Algebra helps us solve problems where some numbers are unknown. Key ideas:</p>
+                    <ul>
+                        <li>Letters (like x) can represent unknown numbers</li>
+                        <li>Equations show relationships between numbers</li>
+                        <li>We can "solve" equations to find unknown values</li>
+                    </ul>`;
+                }
+            } else if (depth === "intermediate") {
+                content += `<p>Now let's explore ${topic} more deeply:</p>`;
+                
+                if (topic === "Sustainable development") {
+                    content += `<p>The 17 UN Sustainable Development Goals (SDGs) provide a framework for action:</p>
+                    <ul>
+                        <li>No Poverty, Zero Hunger, Good Health</li>
+                        <li>Quality Education, Gender Equality</li>
+                        <li>Clean Water, Affordable Energy</li>
+                        <li>Economic Growth, Innovation, Reduced Inequalities</li>
+                        <li>Sustainable Cities, Responsible Consumption</li>
+                        <li>Climate Action, Life Below Water, Life On Land</li>
+                        <li>Peace and Justice, Partnerships</li>
+                    </ul>`;
+                } else if (topic === "Algebra") {
+                    content += `<p>In algebra, we use equations to model real-world situations:</p>
+                    <ul>
+                        <li>Linear equations describe constant rate changes</li>
+                        <li>Systems of equations can solve complex problems</li>
+                        <li>Graphical representations reveal patterns</li>
+                    </ul>`;
+                }
+            } else { // advanced or expert
+                content += `<p>Advanced understanding of ${topic}:</p>`;
+                
+                if (topic === "Sustainable development") {
+                    content += `<p>Advanced sustainability concepts include:</p>
+                    <ul>
+                        <li>Life cycle assessment of products</li>
+                        <li>Carbon footprint calculation methodologies</li>
+                        <li>Circular economy business models</li>
+                        <li>Policy frameworks for sustainability</li>
+                        <li>Systems thinking approaches</li>
+                    </ul>`;
+                } else if (topic === "Algebra") {
+                    content += `<p>Advanced algebraic concepts:</p>
+                    <ul>
+                        <li>Matrix algebra and applications</li>
+                        <li>Abstract algebraic structures</li>
+                        <li>Algebraic geometry concepts</li>
+                        <li>Applications in cryptography</li>
+                    </ul>`;
+                }
+            }
+            
+            // Add NEP's multidisciplinary connection if relevant
+            content += `<div class="nep-highlight">
+                <h4>Multidisciplinary Connections</h4>
+                <p>This topic connects to multiple disciplines as emphasized in NEP 2020:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li><strong>Science:</strong> Environmental science, ecology</li>
+                    <li><strong>Social Studies:</strong> Economics, political science</li>
+                    <li><strong>Mathematics:</strong> Data analysis, modeling</li>
+                    <li><strong>Arts:</strong> Communication design, storytelling</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li><strong>Physics:</strong> Equations of motion</li>
+                    <li><strong>Economics:</strong> Supply-demand curves</li>
+                    <li><strong>Computer Science:</strong> Algorithms, data structures</li>
+                    <li><strong>Engineering:</strong> Structural calculations</li>
+                </ul>`;
+            }
+            
+            content += `</div>`;
+            
+            // Add vocational connection if relevant to NEP's emphasis on vocational education
+            if (profile.goal === "vocational" || subject === "vocational") {
+                content += `<div class="vocational-card">
+                    <h4>Vocational Application</h4>
+                    <p>NEP emphasizes vocational education - here's how ${topic} applies to vocational skills:</p>`;
+                
+                if (topic === "Sustainable development") {
+                    content += `<ul>
+                        <li>Green building techniques for construction</li>
+                        <li>Sustainable agriculture practices</li>
+                        <li>Renewable energy system installation</li>
+                        <li>Waste management and recycling</li>
+                    </ul>`;
+                } else if (topic === "Algebra") {
+                    content += `<ul>
+                        <li>Construction calculations and measurements</li>
+                        <li>Electrical circuit design</li>
+                        <li>Automotive system diagnostics</li>
+                        <li>Culinary recipe scaling</li>
+                    </ul>`;
+                }
+                
+                content += `</div>`;
+            }
+            
+            content += `</div>`; // Close concept-box
+            
+            // Add web info if available
+            if (navigator.onLine) {
+                try {
+                    const webInfo = await fetchTopicInfo(topic);
+                    content += `<div class="concept-box">
+                        <h3>Additional Resources</h3>
+                        <p>${webInfo}</p>
+                        <p>Explore more at your school/college library or online learning platforms as suggested in NEP 2020.</p>
+                    </div>`;
+                } catch (e) {
+                    console.log("Couldn't fetch web info");
+                }
+            }
+            
+            content += `</div>`; // Close lesson-section
+            return content;
+        }
+
+        // Generate examples content with NEP's real-world application focus
+        function generateExamplesContent(topic, subject, depth, profile) {
+            let content = `<div class="lesson-section">
+                <h2 class="lesson-title">${topic} - Real-world Applications</h2>
+                <div class="example-box">
+                    <h3>Practical Examples</h3>
+                    <p>NEP emphasizes connecting learning to real-life applications. Here are examples:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<p><strong>Example 1:</strong> Sustainable urban planning in India</p>
+                <p>Cities like Chennai are implementing rainwater harvesting to address water scarcity, demonstrating SDG 6 (Clean Water).</p>
+                
+                <p><strong>Example 2:</strong> Solar energy adoption in rural India</p>
+                <p>Projects bringing solar power to villages show SDG 7 (Affordable Energy) in action while creating local jobs (SDG 8).</p>`;
+                
+                if (depth === "intermediate" || depth === "advanced" || depth === "expert") {
+                    content += `<p><strong>Example 3:</strong> Circular economy in Indian industries</p>
+                    <p>Companies like Tata Steel recycle 95% of their water, showing industrial applications of sustainability principles.</p>`;
+                }
+            } else if (topic === "Algebra") {
+                content += `<p><strong>Example 1:</strong> Algebra in personal finance</p>
+                <p>Calculating loan payments (EMIs) uses algebraic formulas to determine how much you'll pay over time.</p>
+                
+                <p><strong>Example 2:</strong> Algebra in construction</p>
+                <p>Builders use algebraic equations to calculate materials needed, ensuring no waste (connecting to sustainability).</p>`;
+                
+                if (depth === "intermediate" || depth === "advanced" || depth === "expert") {
+                    content += `<p><strong>Example 3:</strong> Algebra in computer graphics</p>
+                    <p>Matrix algebra powers 3D animations and video game physics engines.</p>`;
+                }
+            }
+            
+            // Add NEP's local context examples
+            content += `<div class="example-box">
+                <h4>Local Context Examples</h4>
+                <p>NEP emphasizes connecting learning to local contexts. Here's how ${topic} applies in India:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li>Swachh Bharat Mission and waste management</li>
+                    <li>Ujjwala Yojana for clean cooking fuel</li>
+                    <li>National Solar Mission for renewable energy</li>
+                    <li>Organic farming initiatives across states</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li>Calculating crop yields and fertilizer needs</li>
+                    <li>Designing affordable housing structures</li>
+                    <li>Optimizing public transportation routes</li>
+                    <li>Analyzing sports statistics (cricket analytics)</li>
+                </ul>`;
+            }
+            
+            content += `</div>`;
+            
+            // Add interest-based examples if relevant
+            if (profile.interests.includes("Robotics") && subject === "computing") {
+                content += `<div class="example-box">
+                    <h4>Robotics Connection</h4>
+                    <p>Connecting to your interest in robotics:</p>`;
+                
+                if (topic === "Sustainable development") {
+                    content += `<ul>
+                        <li>Robots for precision agriculture reducing water/fertilizer use</li>
+                        <li>AI-powered recycling sorting systems</li>
+                        <li>Solar-powered cleaning robots for water bodies</li>
+                    </ul>`;
+                } else if (topic === "Algebra") {
+                    content += `<ul>
+                        <li>Matrix algebra for robot arm movements</li>
+                        <li>Linear equations for navigation algorithms</li>
+                        <li>Algebraic geometry for computer vision</li>
+                    </ul>`;
+                }
+                
+                content += `</div>`;
+            }
+            
+            // Add NEP's multidisciplinary connections
+            content += `<div class="nep-highlight">
+                <h4>Multidisciplinary Connections</h4>
+                <p>NEP encourages seeing connections across subjects. ${topic} relates to:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li><strong>History:</strong> How societies adapted to environmental changes</li>
+                    <li><strong>Literature:</strong> Environmental themes in poetry and prose</li>
+                    <li><strong>Art:</strong> Creating awareness through visual media</li>
+                    <li><strong>Economics:</strong> Cost-benefit analysis of sustainability</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li><strong>Music:</strong> Mathematical patterns in rhythm</li>
+                    <li><strong>Art:</strong> Geometric patterns and symmetry</li>
+                    <li><strong>Sports:</strong> Statistics and performance analysis</li>
+                    <li><strong>Cooking:</strong> Recipe measurements and scaling</li>
+                </ul>`;
+            }
+            
+            content += `</div></div>`; // Close example-box and lesson-section
+            return content;
+        }
+
+        // Generate practice content aligned with NEP's skill development focus
+        function generatePracticeContent(topic, subject, depth, profile) {
+            let content = `<div class="lesson-section">
+                <h2 class="lesson-title">${topic} - Skill Development</h2>
+                <div class="practice-box">
+                    <h3>Skill-Building Activities</h3>
+                    <p>NEP emphasizes competency development. Practice these activities to build key skills:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<div class="practice-box">
+                    <h4>Critical Thinking Activities</h4>
+                    <ul>
+                        <li>Analyze your school's sustainability practices and suggest improvements</li>
+                        <li>Compare the environmental impact of different transportation methods</li>
+                        <li>Debate: Should development ever compromise environmental protection?</li>
+                    </ul>
+                </div>`;
+                
+                content += `<div class="practice-box">
+                    <h4>Collaboration Projects</h4>
+                    <ul>
+                        <li>Work in teams to design a sustainable community space</li>
+                        <li>Organize a campus clean-up drive with assigned roles</li>
+                        <li>Create a presentation on SDGs dividing research tasks</li>
+                    </ul>
+                </div>`;
+                
+                if (depth === "intermediate" || depth === "advanced" || depth === "expert") {
+                    content += `<div class="practice-box">
+                        <h4>Research Skills</h4>
+                        <ul>
+                            <li>Calculate your family's carbon footprint</li>
+                            <li>Interview local business owners about sustainability practices</li>
+                            <li>Analyze water usage data from your municipality</li>
+                        </ul>
+                    </div>`;
+                }
+            } else if (topic === "Algebra") {
+                content += `<div class="practice-box">
+                    <h4>Problem Solving Exercises</h4>
+                    <ul>
+                        <li>Create algebraic models for real-life situations (shopping budgets, travel plans)</li>
+                        <li>Solve word problems involving multiple variables</li>
+                        <li>Design your own algebraic puzzle for classmates</li>
+                    </ul>
+                </div>`;
+                
+                content += `<div class="practice-box">
+                    <h4>Application Challenges</h4>
+                    <ul>
+                        <li>Use algebra to optimize a simple recipe for different group sizes</li>
+                        <li>Calculate material needs for a home improvement project</li>
+                        <li>Analyze mobile data plan options using equations</li>
+                    </ul>
+                </div>`;
+            }
+            
+            // Add NEP's experiential learning activities
+            content += `<div class="practice-box">
+                <h4>Experiential Learning (NEP Recommended)</h4>
+                <p>Learning by doing helps develop deeper understanding:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li>Start a composting project at home/school</li>
+                    <li>Create an awareness campaign about local environmental issues</li>
+                    <li>Design a model sustainable house using recycled materials</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li>Measure and graph growth rates of plants with different treatments</li>
+                    <li>Create scaled drawings of your classroom using ratios</li>
+                    <li>Track and analyze your daily screen time with equations</li>
+                </ul>`;
+            }
+            
+            content += `</div>`;
+            
+            // Add vocational skill practice if relevant
+            if (profile.goal === "vocational" || subject === "vocational") {
+                content += `<div class="vocational-card">
+                    <h4>Vocational Skill Practice</h4>
+                    <p>NEP emphasizes vocational education. Develop these job-related skills:</p>`;
+                
+                if (topic === "Sustainable development") {
+                    content += `<ul>
+                        <li>Practice conducting energy audits (checking for waste)</li>
+                        <li>Learn to install a rainwater harvesting system model</li>
+                        <li>Create a sustainable business plan for a local shop</li>
+                    </ul>`;
+                } else if (topic === "Algebra") {
+                    content += `<ul>
+                        <li>Calculate building material requirements from blueprints</li>
+                        <li>Practice mixing ratios for paints or chemicals</li>
+                        <li>Create production schedules using algebraic formulas</li>
+                    </ul>`;
+                }
+                
+                content += `</div>`;
+            }
+            
+            content += `</div></div>`; // Close practice-box and lesson-section
+            return content;
+        }
+
+        // Generate assessment content aligned with NEP's competency-based approach
+        function generateAssessmentContent(topic, subject, depth, profile) {
+            let content = `<div class="lesson-section">
+                <h2 class="lesson-title">${topic} - Competency Assessment</h2>
+                <div class="iit-box">
+                    <h3>Formative Assessments</h3>
+                    <p>NEP recommends regular formative assessments. Try these self-checks:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<div class="assessment-badge"><i class="fas fa-question-circle"></i> Quick Quiz</div>
+                <p>1. Name three pillars of sustainable development.<br>
+                2. Give one example of unsustainable practice in your community.<br>
+                3. How does SDG 4 (Quality Education) connect to other SDGs?</p>`;
+                
+                content += `<div class="assessment-badge"><i class="fas fa-tasks"></i> Reflection</div>
+                <p>Write a paragraph: How can you personally contribute to sustainability in your daily life?</p>`;
+                
+                if (depth === "intermediate" || depth === "advanced" || depth === "expert") {
+                    content += `<div class="assessment-badge"><i class="fas fa-chart-line"></i> Analysis Task</div>
+                    <p>Compare the sustainability approaches of two Indian cities using available data.</p>`;
+                }
+            } else if (topic === "Algebra") {
+                content += `<div class="assessment-badge"><i class="fas fa-question-circle"></i> Quick Quiz</div>
+                <p>1. Solve for x: 2x + 5 = 15<br>
+                2. What is the slope of the line y = 3x - 2?<br>
+                3. Create a word problem that can be solved with the equation 4x + 10 = 30</p>`;
+                
+                content += `<div class="assessment-badge"><i class="fas fa-tasks"></i> Application</div>
+                <p>Find a real-life situation at home that can be modeled with algebra and write the equation.</p>`;
+            }
+            
+            // Add NEP's suggested peer assessment
+            content += `<div class="assessment-badge"><i class="fas fa-users"></i> Peer Assessment</div>
+            <p>Exchange your work with a classmate and provide constructive feedback based on rubric criteria.</p>`;
+            
+            // Add competency rubrics
+            content += `<div class="iit-box">
+                <h3>Competency Rubrics (NEP-Aligned)</h3>
+                <p>Evaluate your developing competencies in these areas:</p>
+                <table style="width:100%; border-collapse: collapse; margin-top:10px;">
+                    <tr style="background:#f1f5f9; border-bottom:1px solid #e2e8f0;">
+                        <th style="padding:8px; text-align:left;">Competency</th>
+                        <th style="padding:8px; text-align:left;">Developing (1)</th>
+                        <th style="padding:8px; text-align:left;">Proficient (2)</th>
+                        <th style="padding:8px; text-align:left;">Advanced (3)</th>
+                    </tr>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="padding:8px;">Understanding Concepts</td>
+                        <td style="padding:8px;">Can define basic terms</td>
+                        <td style="padding:8px;">Explains interconnections</td>
+                        <td style="padding:8px;">Analyzes complex relationships</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="padding:8px;">Application</td>
+                        <td style="padding:8px;">Identifies simple examples</td>
+                        <td style="padding:8px;">Proposes practical solutions</td>
+                        <td style="padding:8px;">Designs innovative approaches</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="padding:8px;">Critical Thinking</td>
+                        <td style="padding:8px;">Recognizes basic issues</td>
+                        <td style="padding:8px;">Evaluates multiple perspectives</td>
+                        <td style="padding:8px;">Synthesizes complex information</td>
+                    </tr>`;
+            } else if (topic === "Algebra") {
+                content += `<tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="padding:8px;">Conceptual Understanding</td>
+                        <td style="padding:8px;">Solves basic equations</td>
+                        <td style="padding:8px;">Explains solution processes</td>
+                        <td style="padding:8px;">Connects to advanced concepts</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="padding:8px;">Problem Solving</td>
+                        <td style="padding:8px;">Solves routine problems</td>
+                        <td style="padding:8px;">Adapts strategies as needed</td>
+                        <td style="padding:8px;">Creates original solutions</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                        <td style="padding:8px;">Real-world Application</td>
+                        <td style="padding:8px;">Identifies simple applications</td>
+                        <td style="padding:8px;">Models practical situations</td>
+                        <td style="padding:8px;">Analyzes complex systems</td>
+                    </tr>`;
+            }
+            
+            content += `</table></div>`;
+            
+            // Add portfolio suggestion as per NEP
+            content += `<div class="iit-box">
+                <h3>Learning Portfolio (NEP Recommendation)</h3>
+                <p>Maintain evidence of your learning journey:</p>
+                <ul>
+                    <li>Include your best work samples</li>
+                    <li>Add reflections on your progress</li>
+                    <li>Document projects and extracurricular connections</li>
+                    <li>Track competency development over time</li>
+                </ul>
+                <p>This portfolio can showcase your holistic development for future opportunities.</p>
+            </div>`;
+            
+            content += `</div></div>`; // Close iit-box and lesson-section
+            return content;
+        }
+
+        // Generate simulation content for experiential learning (NEP emphasis)
+        function generateSimulationContent(topic, subject, depth, profile) {
+            let content = `<div class="lesson-section">
+                <h2 class="lesson-title">${topic} - Experiential Learning</h2>
+                <div class="simulation-box">
+                    <h3>Interactive Simulation</h3>
+                    <p>NEP emphasizes learning through experience. This simulation will help you explore ${topic} concepts interactively.</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<p>Imagine a virtual city where you make sustainability decisions:</p>
+                <ul>
+                    <li>Allocate resources between development and conservation</li>
+                    <li>See long-term impacts of policy choices</li>
+                    <li>Balance economic, social and environmental factors</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<p>Algebra visualization simulation concepts:</p>
+                <ul>
+                    <li>Interactive equation balancing</li>
+                    <li>Graphical representation of functions</li>
+                    <li>Real-world problem scenario modeling</li>
+                </ul>`;
+            }
+            
+            // Add simulation parameters based on profile
+            content += `<div class="simulation-box">
+                <h4>Simulation Parameters</h4>
+                <p>Customized for your level (${profile.currentMarks} competency level):</p>`;
+            
+            if (profile.currentMarks === "beginner" || profile.currentMarks === "developing") {
+                content += `<p>Guided simulation with step-by-step support</p>`;
+            } else if (profile.currentMarks === "proficient") {
+                content += `<p>Interactive simulation with feedback</p>`;
+            } else {
+                content += `<p>Open-ended simulation with multiple variables</p>`;
+            }
+            
+            if (profile.learningStyle === "visual") {
+                content += `<p>Visual mode active - emphasizing graphs and animations</p>`;
+            } else if (profile.learningStyle === "kinesthetic") {
+                content += `<p>Interactive mode - adjust parameters to see changes</p>`;
+            }
+            
+            // Add interest connection if relevant
+            if (profile.interests.includes("Robotics") && subject === "computing") {
+                content += `<p>The simulation includes connections to robotics applications!</p>`;
+            }
+            
+            content += `</div>
+                <p id="simulationStatus">Initializing experiential learning simulation... <span class='loading'>Please wait</span></p>
+                <div id="simulationResults"></div>
+            </div>`;
+            
+            // Add NEP's community learning suggestion
+            content += `<div class="simulation-box">
+                <h3>Community-Based Learning (NEP Recommendation)</h3>
+                <p>Extend your learning beyond the simulation:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li>Interview community elders about environmental changes they've observed</li>
+                    <li>Map local water sources and their conditions</li>
+                    <li>Organize a tree-planting initiative</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li>Help local shopkeepers analyze their sales data</li>
+                    <li>Calculate material needs for a community project</li>
+                    <li>Teach algebra concepts to younger students</li>
+                </ul>`;
+            }
+            
+            content += `</div></div>`; // Close simulation-box and lesson-section
+            
+            // Start simulation after a delay
+            setTimeout(() => {
+                document.getElementById('simulationStatus').innerHTML = "Simulation ready! Explore the concepts interactively.";
+                
+                if (shouldShowDrone(topic, subject)) {
+                    document.getElementById('simulationStatus').innerHTML += " Watch the drone animation.";
+                    const drone = document.getElementById("drone");
+                    drone.style.display = "block";
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('simulationResults').innerHTML = 
+                        `<p>Simulation complete! Here's what you experienced:</p>
+                        <ul>
+                            <li>Competency practiced: ${getCompetencyForTopic(topic)}</li>
+                            <li>Key learning points: ${Math.floor(Math.random()*3)+2}</li>
+                            <li>Reflection question: How does this connect to real-life situations?</li>
+                        </ul>`;
+                    const drone = document.getElementById("drone");
+                    if (drone.style.display === "block") {
+                        drone.style.display = "none";
+                    }
+                }, 3000);
+            }, 2000);
+            
+            return content;
+        }
+
+        // Generate holistic development content (NEP emphasis)
+        function generateHolisticContent(topic, subject, depth, profile) {
+            let content = `<div class="lesson-section">
+                <h2 class="lesson-title">${topic} - Holistic Development</h2>
+                <div class="holistic-card">
+                    <h3>Physical & Mental Well-being</h3>
+                    <p>NEP emphasizes development of body and mind together. For ${topic}, consider:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li><strong>Yoga/Exercise:</strong> Practice outdoor activities that connect you with nature</li>
+                    <li><strong>Mindfulness:</strong> Reflect on your relationship with the environment</li>
+                    <li><strong>Nutrition:</strong> Explore sustainable eating habits</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li><strong>Movement:</strong> Create human graphs or equation formations</li>
+                    <li><strong>Breaks:</strong> Take active breaks during problem-solving sessions</li>
+                    <li><strong>Posture:</strong> Maintain good posture while working on math problems</li>
+                </ul>`;
+            }
+            
+            content += `</div>`;
+            
+            // Add arts integration as per NEP
+            content += `<div class="holistic-card">
+                <h3>Arts Integration</h3>
+                <p>NEP recommends integrating arts with academics. For ${topic}:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li>Create artwork from recycled materials</li>
+                    <li>Write and perform a short play about sustainability</li>
+                    <li>Compose a song/poem about environmental protection</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li>Create geometric art using algebraic patterns</li>
+                    <li>Write a story where characters solve algebra problems</li>
+                    <li>Choreograph a dance that represents equations</li>
+                </ul>`;
+            }
+            
+            content += `</div>`;
+            
+            // Add social-emotional learning as per NEP
+            content += `<div class="holistic-card">
+                <h3>Social-Emotional Learning</h3>
+                <p>NEP highlights emotional intelligence development. For ${topic}:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li>Discuss how environmental changes affect people emotionally</li>
+                    <li>Role-play negotiations between developers and conservationists</li>
+                    <li>Reflect on your feelings about global challenges</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li>Share strategies for overcoming math anxiety</li>
+                    <li>Collaborate on challenging problems, supporting each other</li>
+                    <li>Reflect on your problem-solving mindset</li>
+                </ul>`;
+            }
+            
+            content += `</div>`;
+            
+            // Add Indian knowledge systems as per NEP
+            content += `<div class="holistic-card">
+                <h3>Indian Knowledge Systems</h3>
+                <p>NEP emphasizes connecting to India's rich heritage. For ${topic}:</p>`;
+            
+            if (topic === "Sustainable development") {
+                content += `<ul>
+                    <li>Research traditional Indian water conservation methods</li>
+                    <li>Explore Ayurveda's connection to environmental balance</li>
+                    <li>Study ancient Indian texts on nature conservation</li>
+                </ul>`;
+            } else if (topic === "Algebra") {
+                content += `<ul>
+                    <li>Learn about ancient Indian mathematicians like Aryabhata</li>
+                    <li>Explore Vedic math techniques</li>
+                    <li>Study algebraic concepts in ancient Indian architecture</li>
+                </ul>`;
+            }
+            
+            content += `</div></div>`; // Close holistic-card and lesson-section
+            return content;
+        }
+
+        // Helper function to get competencies for a topic
+        function getCompetencyForTopic(topic) {
+            if (topic === "Sustainable development") {
+                return "Systems Thinking, Environmental Awareness";
+            } else if (topic === "Algebra") {
+                return "Logical Reasoning, Problem Solving";
+            }
+            return "Critical Thinking";
+        }
+
+        // Check if drone example should be shown for this topic
+        function shouldShowDrone(topic, subject) {
+            const droneRelevantTopics = ["Robotics", "Technology", "Physics"];
+            return subject === "computing" && droneRelevantTopics.includes(topic);
+        }
+
+        // Update progress bar
+        function updateProgressBar(percent) {
+            const bar = document.getElementById('progressBar');
+            bar.style.width = percent + '%';
+            bar.textContent = percent + '%';
+            
+            // Update path steps
+            const path = document.getElementById('progressDetails');
+            if (percent >= 10) path.innerHTML = `<div class="path-step completed">Learning profile analyzed</div>`;
+            if (percent >= 20) path.innerHTML += `<div class="path-step completed">Conceptual materials prepared</div>`;
+            if (percent >= 35) path.innerHTML += `<div class="path-step completed">Real-world applications connected</div>`;
+            if (percent >= 50) path.innerHTML += `<div class="path-step completed">Skill-building activities created</div>`;
+            if (percent >= 65) path.innerHTML += `<div class="path-step completed">Competency assessments designed</div>`;
+            if (percent >= 80) path.innerHTML += `<div class="path-step completed">Experiential learning setup</div>`;
+            if (percent >= 100) path.innerHTML += `<div class="path-step completed">Holistic development integrated</div>`;
+        }
+
+        // Fetch topic info from Wikipedia
+        async function fetchTopicInfo(topic) {
+            if (!navigator.onLine) return "Internet connection required for additional information.";
+            try {
+                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`);
+                const data = await response.json();
+                return data.extract || "No additional information available.";
+            } catch (e) {
+                return "Couldn't fetch additional information.";
+            }
+        }
+
+        // Save profile and show analysis
+        function saveProfile() {
+            const profile = {
+                currentClass: document.getElementById("currentClass").value,
+                currentMarks: document.getElementById("currentMarks").value,
+                strengths: document.getElementById("strengths").value.split(',').map(s => s.trim()),
+                weaknesses: document.getElementById("weaknesses").value.split(',').map(s => s.trim()),
+                learningStyle: document.getElementById("learningStyle").value,
+                interests: document.getElementById("interests").value.split(',').map(s => s.trim()),
+                goal: document.getElementById("goal").value,
+                studyTime: document.getElementById("studyTime").value
+            };
+            
+            localStorage.setItem("studentProfile", JSON.stringify(profile));
+            analyzeProfile(profile);
+        }
+
+        // Analyze profile and show NEP-aligned recommendations
+        function analyzeProfile(profile) {
+            const analysisDiv = document.getElementById("profileAnalysis");
+            analysisDiv.style.display = "block";
+            
+            let analysisHTML = `<h3>Your NEP-Aligned Learning Profile Analysis</h3>`;
+            
+            // Class and competency level analysis
+            analysisHTML += `<div class="concept-box">
+                <h4>Current Learning Stage</h4>`;
+            
+            if (profile.currentClass === "foundation") {
+                analysisHTML += `<p>You're in the <strong>Foundational Stage (Age 3-8)</strong> focusing on play-based learning as recommended by NEP.</p>`;
+            } else if (["3","4","5"].includes(profile.currentClass)) {
+                analysisHTML += `<p>You're in the <strong>Preparatory Stage (Classes 3-5)</strong> focusing on foundational literacy and numeracy.</p>`;
+            } else if (["6","7","8"].includes(profile.currentClass)) {
+                analysisHTML += `<p>You're in the <strong>Middle Stage (Classes 6-8)</strong> introducing more abstract concepts across subjects.</p>`;
+            } else if (["9","10","11","12"].includes(profile.currentClass)) {
+                analysisHTML += `<p>You're in the <strong>Secondary Stage (Classes 9-12)</strong> with greater flexibility and depth as per NEP.</p>`;
+            } else {
+                analysisHTML += `<p>You're in <strong>Higher Education</strong> with multidisciplinary options emphasized in NEP.</p>`;
+            }
+            
+            analysisHTML += `<p>Your current competency level is <strong>${profile.currentMarks}</strong>.</p>`;
+            
+            if (profile.currentMarks === "beginner" || profile.currentMarks === "developing") {
+                analysisHTML += `<p class="weakness-alert">We'll focus on building strong foundations with interactive, engaging activities.</p>`;
+            } else if (profile.currentMarks === "proficient") {
+                analysisHTML += `<p>We'll strengthen your understanding with challenging applications and problem-solving.</p>`;
+            } else {
+                analysisHTML += `<p class="strength-highlight">You're ready for advanced, multidisciplinary explorations and research-oriented learning.</p>`;
+            }
+            
+            analysisHTML += `</div>`;
+            
+            // Strengths and weaknesses analysis
+            analysisHTML += `<div class="concept-box">
+                <h4>Skill Analysis</h4>
+                <p><span class="strength-highlight">Strengths:</span> ${profile.strengths.join(', ')}</p>
+                <p><span class="weakness-alert">Areas for Growth:</span> ${profile.weaknesses.join(', ')}</p>`;
+            
+            if (profile.weaknesses.some(w => ["Communication", "Collaboration"].includes(w))) {
+                analysisHTML += `<p class="weakness-alert">Since you want to improve ${profile.weaknesses.filter(w => ["Communication", "Collaboration"].includes(w)).join(' or ')}, 
+                we'll include more group projects and presentations as suggested in NEP.</p>`;
+            }
+            
+            analysisHTML += `</div>`;
+            
+            // Learning style adaptation
+            analysisHTML += `<div class="concept-box">
+                <h4>Learning Style Adaptation</h4>`;
+            
+            if (profile.learningStyle === "visual") {
+                analysisHTML += `<p>As a <strong>visual learner</strong>, your NEP-aligned lessons will include:
+                <ul>
+                    <li>Diagrams, infographics and concept maps</li>
+                    <li>Video explanations and animations</li>
+                    <li>Color-coded organization of ideas</li>
+                    <li>Visual memory techniques</li>
+                </ul></p>`;
+            } else if (profile.learningStyle === "auditory") {
+                analysisHTML += `<p>As an <strong>auditory learner</strong>, your NEP-aligned lessons will include:
+                <ul>
+                    <li>Detailed verbal explanations</li>
+                    <li>Discussion prompts and peer conversations</li>
+                    <li>Mnemonics, rhymes and musical connections</li>
+                    <li>Audio summaries and podcasts</li>
+                </ul></p>`;
+            } else if (profile.learningStyle === "kinesthetic") {
+                analysisHTML += `<p>As a <strong>kinesthetic learner</strong>, your NEP-aligned lessons will include:
+                <ul>
+                    <li>Hands-on activities and experiments</li>
+                    <li>Physical models and manipulatives</li>
+                    <li>Movement-based learning games</li>
+                    <li>Real-world applications and projects</li>
+                </ul></p>`;
+            } else if (profile.learningStyle === "readwrite") {
+                analysisHTML += `<p>As a <strong>reading/writing learner</strong>, your NEP-aligned lessons will include:
+                <ul>
+                    <li>Detailed notes and textbook-style explanations</li>
+                    <li>Writing exercises and summaries</li>
+                    <li>Reading assignments with analysis</li>
+                    <li>List-making and organized outlines</li>
+                </ul></p>`;
+            } else {
+                analysisHTML += `<p>As a <strong>multimodal learner</strong>, your NEP-aligned lessons will combine different approaches for comprehensive understanding.</p>`;
+            }
+            
+            analysisHTML += `</div>`;
+            
+            // Goal-based roadmap
+            analysisHTML += `<div class="iit-box">
+                <h4>NEP-Aligned Learning Path</h4>`;
+            
+            if (profile.goal === "foundational") {
+                analysisHTML += `<p>Your focus on <strong>foundational literacy and numeracy</strong> aligns with NEP's top priority:</p>
+                <ul>
+                    <li>Interactive games for basic reading and math</li>
+                    <li>Storytelling and rhymes for language development</li>
+                    <li>Manipulatives and visual aids for numeracy</li>
+                    <li>Regular competency assessments</li>
+                </ul>`;
+            } else if (profile.goal === "holistic") {
+                analysisHTML += `<p>Your focus on <strong>holistic development</strong> matches NEP's comprehensive approach:</p>
+                <ul>
+                    <li>Integration of arts, sports and academics</li>
+                    <li>Social-emotional learning activities</li>
+                    <li>Community service projects</li>
+                    <li>Reflection and mindfulness practices</li>
+                </ul>`;
+            } else if (profile.goal === "vocational") {
+                analysisHTML += `<p>Your focus on <strong>vocational skills</strong> supports NEP's emphasis on skill development:</p>
+                <ul>
+                    <li>Practical, hands-on learning experiences</li>
+                    <li>Industry-relevant skill building</li>
+                    <li>Internship and apprenticeship connections</li>
+                    <li>Entrepreneurship education</li>
+                </ul>`;
+            } else if (profile.goal === "competitive") {
+                analysisHTML += `<p>Your focus on <strong>competitive exams</strong> will incorporate NEP's recommendations:</p>
+                <ul>
+                    <li>Conceptual understanding over rote learning</li>
+                    <li>Multidisciplinary problem solving</li>
+                    <li>Regular mock tests with analysis</li>
+                    <li>Stress management techniques</li>
+                </ul>`;
+            }
+            
+            analysisHTML += `<p>Based on your ${profile.studyTime} hours weekly study time, we'll create a balanced schedule including breaks and varied activities.</p>`;
+            analysisHTML += `</div>`;
+            
+            // Interest integration with NEP's flexibility
+            if (profile.interests.length > 0) {
+                analysisHTML += `<div class="example-box">
+                    <h4>Interest-Based Learning (NEP Recommendation)</h4>
+                    <p>We'll connect concepts to your interests in <span class="interest-note">${profile.interests.join(', ')}</span> to make learning more engaging and relevant.</p>
+                    <p>For example, when studying various topics, we'll show applications in areas that interest you.</p>
+                </div>`;
+            }
+            
+            // Add NEP's 21st century skills focus
+            analysisHTML += `<div class="nep-highlight">
+                <h4>21st Century Skills Development</h4>
+                <p>Your learning will develop these NEP-emphasized competencies:</p>
+                <div>
+                    <span class="skill-tag"><i class="fas fa-brain"></i> Critical Thinking</span>
+                    <span class="skill-tag"><i class="fas fa-lightbulb"></i> Creativity</span>
+                    <span class="skill-tag"><i class="fas fa-users"></i> Collaboration</span>
+                    <span class="skill-tag"><i class="fas fa-comments"></i> Communication</span>
+                    <span class="skill-tag"><i class="fas fa-laptop-code"></i> Digital Literacy</span>
+                    <span class="skill-tag"><i class="fas fa-seedling"></i> Environmental Awareness</span>
+                    <span class="skill-tag"><i class="fas fa-hands-helping"></i> Social Responsibility</span>
+                </div>
+            </div>`;
+            
+            analysisHTML += `<button onclick="generateStudyPlan()">Generate NEP-Aligned Learning Plan</button>`;
+            analysisDiv.innerHTML = analysisHTML;
+        }
+
+        // Generate study plan based on profile and NEP guidelines
+        function generateStudyPlan() {
+            const profile = JSON.parse(localStorage.getItem("studentProfile"));
+            const studyPlanDiv = document.getElementById("profileAnalysis");
+            
+            let planHTML = `<h3>Your NEP-Aligned Learning Plan</h3>
+            <div class="learning-path">`;
+            
+            // Generate path based on class and goals
+            if (profile.currentClass === "foundation") {
+                planHTML += `<h4>Foundational Stage Plan (Age 3-8)</h4>
+                <div class="path-step">Play-based learning activities</div>
+                <div class="path-step">Developing language skills through stories and songs</div>
+                <div class="path-step">Early numeracy through games and exploration</div>
+                <div class="path-step">Social-emotional development activities</div>`;
+            } else if (["3","4","5"].includes(profile.currentClass)) {
+                planHTML += `<h4>Preparatory Stage Plan (Classes 3-5)</h4>
+                <div class="path-step">Focus on foundational literacy and numeracy</div>
+                <div class="path-step">Interactive learning across subjects</div>
+                <div class="path-step">Developing basic digital literacy</div>
+                <div class="path-step">Arts and physical education integration</div>`;
+            } else if (["6","7","8"].includes(profile.currentClass)) {
+                planHTML += `<h4>Middle Stage Plan (Classes 6-8)</h4>
+                <div class="path-step">Abstract concept development</div>
+                <div class="path-step">Experiential learning across subjects</div>
+                <div class="path-step">Introduction to vocational exploration</div>
+                <div class="path-step">Developing critical thinking skills</div>`;
+            } else if (["9","10","11","12"].includes(profile.currentClass)) {
+                planHTML += `<h4>Secondary Stage Plan (Classes 9-12)</h4>
+                <div class="path-step">Multidisciplinary subject exploration</div>
+                <div class="path-step">Depth in chosen areas of interest</div>
+                <div class="path-step">Vocational skill development</div>
+                <div class="path-step">Research and project-based learning</div>`;
+            }
+            
+            // Add subject-specific paths for weaknesses
+            if (profile.weaknesses.includes("Communication")) {
+                planHTML += `<h4>Communication Skill Development</h4>
+                <div class="path-step">Regular writing exercises</div>
+                <div class="path-step">Group discussion participation</div>
+                <div class="path-step">Presentation practice</div>
+                <div class="path-step">Peer feedback sessions</div>`;
+            }
+            
+            if (profile.weaknesses.includes("Problem solving")) {
+                planHTML += `<h4>Problem Solving Development</h4>
+                <div class="path-step">Real-world scenario analysis</div>
+                <div class="path-step">Step-by-step solution strategies</div>
+                <div class="path-step">Collaborative problem-solving projects</div>
+                <div class="path-step">Reflection on problem-solving approaches</div>`;
+            }
+            
+            // Add holistic development components as per NEP
+            planHTML += `<h4>Holistic Development Components</h4>
+            <div class="path-step">Weekly physical activity and yoga</div>
+            <div class="path-step">Arts integration activities</div>
+            <div class="path-step">Social-emotional learning exercises</div>
+            <div class="path-step">Community service projects</div>`;
+            
+            planHTML += `</div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 5%">5%</div>
+            </div>
+            <p>Begin your NEP-aligned learning journey by selecting a topic above!</p>`;
+            
+            studyPlanDiv.innerHTML += planHTML;
+        }
+    </script>
+</body>
+</html>
